@@ -1,0 +1,32 @@
+﻿
+@model List<ProductModel>
+@{
+
+}
+<h2> Our Mobile Phone The Specification</h2>
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Color</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var prodt in Model)
+        {
+            <tr>
+                <td>@prodt.Name</td>
+                <td>@prodt.Description</td>
+                <td>@prodt.Amount</td>
+                <td>@prodt.Color</td>
+            </tr>
+        }
+    </tbody>
+
+
+
+</table>
