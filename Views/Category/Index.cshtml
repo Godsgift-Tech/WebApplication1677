@@ -1,0 +1,30 @@
+﻿@model List<CategoryModel>
+@{
+
+}
+<h2> Categories of our Mobile Phones </h2>
+<a href="/category/add" class="btn-secondary">
+    Add Category
+</a>
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+           
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var prodt in Model)
+        {
+            <tr>
+                <td>@prodt.Name</td>
+                
+            </tr>
+        }
+    </tbody>
+
+
+
+</table>
