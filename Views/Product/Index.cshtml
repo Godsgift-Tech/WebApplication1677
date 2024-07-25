@@ -15,6 +15,8 @@
             <th>Description</th>
             <th>Amount</th>
             <th>Color</th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -23,8 +25,19 @@
             <tr>
                 <td>@prodt.Name</td>
                 <td>@prodt.Description</td>
-                <td>@prodt.Amount</td>
+                <td> &#x20A6;@prodt.Amount.ToString("N")</td>
                 <td>@prodt.Color</td>
+                <td><a href="product/edit/@prodt.Id">edit</a></td>
+                <td>
+                <td>
+                    <form asp-action="Delete" asp-controller="Product" method="post" data-id="@prodt.Id" onsubmit="return confirmDelete();">
+                            @Html.AntiForgeryToken()
+                        <input name="_method" type="hidden" value="DELETE" />
+                        <input type="hidden" name="id" value="@prodt.Id" />
+                        <input type="submit" value="Delete" class="btn btn-danger btn-xs" />
+                    </form>
+                </td>
+                </td>
             </tr>
         }
     </tbody>
@@ -32,3 +45,8 @@
 
 
 </table>
+<script>
+    function confirmDelete() {
+        return confirm('Are you sure you really want to delete this product?');
+    }
+</script>

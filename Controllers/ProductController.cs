@@ -22,7 +22,7 @@ namespace WebApplication1677.Controllers
             var products = _db.Products.ToList();
             var productmodellist= products.Select(x=> new ProductModel
             {
-                
+                Id = x.Id,
                 Name = x.Name,
                 Description = x.Description,
                 Amount = x.Amount,
@@ -57,8 +57,66 @@ namespace WebApplication1677.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            return View();
+            // look for product with this id
+            var productEntity = _db.Products.Find(id);
+            // if this product was not found with that id return not found
+            if (productEntity == null)
+            {
+                return View("Error");
+            }
+
+            // copy from product entity to product model
+            var productModel = new ProductModel
+
+            {
+                Name = productEntity.Name,
+                Description = productEntity.Description,
+                Amount = productEntity.Amount,
+                Color = productEntity.Color,
+                Id = productEntity.Id,
+
+
+            };
+
+
+            return View(productModel);
         }
-        
+        [HttpPost]
+
+        public IActionResult Edit(ProductModel productModel)
+        {
+            // look for product with this id
+            var productEntity = _db.Products.Find(productModel.Id);
+            // if this product was not found with that id return not found
+            if (productEntity == null)
+            {
+                return View("Error");
+            }
+
+            // lets update our entity
+            productEntity.Name = productModel.Name; 
+            productEntity.Description = productModel.Description;
+            productEntity.Amount = productModel.Amount; 
+            productEntity.Color = productModel.Color;
+            productEntity.Id = productModel.Id;
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+               
+            
+            }
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var productEntity =_db.Products.Find(id);
+            if (productEntity == null)
+            {
+                return View("Error");
+            }
+            _db.Products.Remove(productEntity);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+
+
+        }
+        }
     }
-}
