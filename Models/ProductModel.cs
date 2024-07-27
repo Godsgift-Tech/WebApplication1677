@@ -1,4 +1,6 @@
-﻿namespace WebApplication1677.Models
+﻿using System.ComponentModel;
+
+namespace WebApplication1677.Models
 {
     public class ProductModel
     {
@@ -8,6 +10,9 @@
         public decimal Amount { get; set; }
         public string Description { get; set; }
         public string Color { get; set; }
+        public List<string> ImagePaths { get; set; }
+        [DisplayName("Images")]
+        public List<IFormFile> Images { get; set; } // Property for image uploads
     }
 
 }

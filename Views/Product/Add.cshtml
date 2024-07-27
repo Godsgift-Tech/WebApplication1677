@@ -1,4 +1,23 @@
-﻿<div class ="row">
+﻿<div class="container">
+
+<div class ="row">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+            <!-- Image previews for selected images -->
+            <section id="main-carousel" class="splide">
+                <div class="splide__track">
+                    <ul class="splide__list" id="img-main">
+                    </ul>
+                </div>
+            </section>
+            <section id="thumbnail-carousel"
+                     class="splide"
+                     aria-label="The carousel with thumbnails. Selecting a thumbnail will change the Beautiful Gallery carousel.">
+                <div class="splide__track">
+                    <ul class="splide__list" id="img-thumb">
+                    </ul>
+                </div>
+            </section>
+        </div>
     
        <div class = "col-md-3">
 
@@ -34,13 +53,164 @@
                     <input type="text" name="Color" value=" " />
                 </div>
                 <div class="form-group">
-
-                <input type="submit" value="save " />
-                </div>
+                    <input type="file" name="Images"multiple id="imageInput"/>
 
                 </div>
+                <div class="form-group">
+                     <input type="button" value="save "onclick="submitForm()" />
+                </div>
+
+             </div>
             
 
         </form>
     </div>
 </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        prepareThumbs();
+
+        var removeButtons = document.querySelectorAll('.tag-remove');
+
+        removeButtons.forEach(function (button) {
+            button.addEventListener('click', function (event) {
+                // Prevent default action if necessary
+                event.preventDefault();
+
+                // Get the parent tag element
+                var tagElement = this.closest('.tag');
+                if (tagElement) {
+                    removeTag(tagElement);
+                }
+            });
+        });
+    });
+
+    // Attach the 'change' event to the file input
+    document.getElementById('imageInput').addEventListener('change', handleImagePreview);
+
+
+    // Initialize an array to store the selected images
+    var selectedImages = [];
+
+    function handleImagePreview() {
+        //	var imagePreview = document.getElementById('imagePreview');
+        var imageMain = document.getElementById('img-main');
+        var imageThumb = document.getElementById('img-thumb');
+        var input = document.getElementById('imageInput');
+        var files = input.files;
+
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            if (file.type.match('image.*')) {
+                var reader = new FileReader();
+
+                reader.onload = function (event) {
+                    //var image = document.createElement('img');
+                    //image.src = event.target.result;
+                    //image.className = 'img-thumbnail';
+                    //imagePreview.appendChild(image);
+
+
+                    var image1 = document.createElement('img');
+                    image1.src = event.target.result;
+
+                    var image2 = document.createElement('img');
+                    image2.src = event.target.result;
+
+
+                    var liMain = document.createElement('li');
+                    liMain.className = 'splide__slide';
+                    var liThumb = document.createElement('li');
+                    liThumb.className = 'splide__slide';
+
+
+                    liMain.appendChild(image1);
+                    liThumb.appendChild(image2);
+
+                    imageMain.appendChild(liMain);
+                    imageThumb.appendChild(liThumb);
+
+                    prepareThumbs();
+                    // Add the selected image to the array
+                    selectedImages.push(file);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+    }
+    function prepareThumbs() {
+        var main = new Splide('#main-carousel', {
+            type: 'fade',
+            rewind: true,
+            pagination: false,
+            arrows: true,
+        });
+
+
+        var thumbnails = new Splide('#thumbnail-carousel', {
+            fixedWidth: 100,
+            fixedHeight: 60,
+            gap: 10,
+            rewind: true,
+            pagination: false,
+            isNavigation: true,
+            breakpoints: {
+                600: {
+                    fixedWidth: 60,
+                    fixedHeight: 44,
+                },
+            },
+        });
+
+
+        main.sync(thumbnails);
+        main.mount();
+        thumbnails.mount();
+
+    }
+    function submitForm() {
+        var formData = new FormData();
+
+
+
+        // Add other form data
+        var form = document.getElementById('productForm');
+        var formElements = form.elements;
+        for (var i = 0; i < formElements.length; i++) {
+            var element = formElements[i];
+            if (element.name) {
+                if (element.name != 'Images') {
+                    formData.append(element.name, element.value);
+                }
+            }
+        }
+
+        // Add all selected images to the form data
+        for (var i = 0; i < selectedImages.length; i++) {
+            formData.append('Images', selectedImages[i]);
+        }
+
+
+        // Submit the form using AJAX or a similar method
+        // The URL and method will depend on your server-side code
+        $.ajax({
+            url: '/Products/AddProduct',
+            method: 'POST',
+            enctype: 'multipart/form-data',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                // Handle successful submission
+                console.log("SUCCESS : ", data);
+                window.location.href = data;
+            },
+            error: function () {
+                // Handle errors
+            }
+        });
+    }
+</script>

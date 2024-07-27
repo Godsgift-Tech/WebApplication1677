@@ -14,6 +14,7 @@ namespace WebApplication1677.Data
 
         public DbSet<Product>Products { get; set; }
         public DbSet<CategoryEntity> CategoryEntities { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
 
 
 
